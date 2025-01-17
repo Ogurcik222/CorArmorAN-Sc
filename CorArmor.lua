@@ -1,27 +1,35 @@
-local function getCORArmor()
+local targetPosition = Vector3.new(728.44, 7.61, -1732.89)
+local radius = 10
+
+local function activatePromptsAtPosition(position, range)
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
     local originalPosition = humanoidRootPart.CFrame
-
-    local armorZoneCoords = Vector3.new(730.184143, 30.2918987, -1730.35852)
-
-    humanoidRootPart.CFrame = CFrame.new(armorZoneCoords)
+    humanoidRootPart.CFrame = CFrame.new(position)
     task.wait(0.5)
 
-    local armor = workspace:FindFirstChild("CoR_Armor")
-    if armor and armor:FindFirstChild("ProximityPrompt") then
-        humanoidRootPart.CFrame = armor.CFrame
-        task.wait(0.5)
+    local foundPrompt = nil
 
-        fireproximityprompt(armor.ProximityPrompt)
-    else
-        warn("Объект CoR_Armor или его ProximityPrompt не найдены!")
-        return
+    for _, prompt in ipairs(workspace:GetDescendants()) do
+        if prompt:IsA("ProximityPrompt") and prompt.Enabled then
+            local parent = prompt.Parent
+            if parent and parent:IsA("BasePart") and parent.Name == "CoR_Armor" then
+                foundPrompt = prompt
+                break
+            end
+        end
     end
 
-    task.wait(0.3)
+    if foundPrompt then
+        pcall(function()
+            fireproximityprompt(foundPrompt, 1)
+        end)
+        task.wait(0.5)
+    end
+
     humanoidRootPart.CFrame = originalPosition
 end
 
-getCORArmor() 
+activatePromptsAtPosition(targetPosition, radius)
