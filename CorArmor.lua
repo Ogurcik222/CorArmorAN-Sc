@@ -8,7 +8,7 @@ local function activatePromptsAtPosition(position, range)
 
     local originalPosition = humanoidRootPart.CFrame
     humanoidRootPart.CFrame = CFrame.new(position)
-    task.wait(0.5)
+    task.wait(0.3)
 
     local foundPrompt = nil
 
@@ -26,7 +26,7 @@ local function activatePromptsAtPosition(position, range)
         pcall(function()
             fireproximityprompt(foundPrompt, 1)
         end)
-        task.wait(0.5)
+        task.wait(0.3)
     end
 
     humanoidRootPart.CFrame = originalPosition
